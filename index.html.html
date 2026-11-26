@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan ASAS Biologi XII</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#1a2940;--text:#edf3fc;--muted:#9aabc2;--accent:#54d6a0;--red:#ff7777;--line:#2b3b53}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172943 0,#0b1220 48%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;padding:24px}
+.wrap{max-width:820px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.brand{font-weight:800;letter-spacing:.04em}.pill{font-size:12px;color:var(--accent);border:1px solid #2b765c;padding:5px 10px;border-radius:99px}
+.card{background:rgba(18,29,48,.96);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,4vw,34px);box-shadow:0 18px 55px #0005}
+.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;gap:10px}.bar{height:7px;background:#26364d;border-radius:99px;margin:12px 0 22px;overflow:hidden}.fill{height:100%;width:0;background:var(--accent);transition:width .25s}
+.topic{display:inline-block;background:#203b42;color:#8de7c0;border-radius:8px;padding:5px 10px;font-size:12px;margin-bottom:15px}
+h1{font-size:clamp(23px,4vw,32px);line-height:1.2;margin:0 0 8px}.sub{color:var(--muted);font-size:14px;margin:0 0 25px}
+.question{font-size:clamp(18px,2.6vw,22px);font-weight:650;margin:8px 0 22px}
+.options{display:grid;gap:11px}.option{display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:13px;background:#152238;color:var(--text);font:inherit;cursor:pointer;transition:.15s}
+.option:hover:not(:disabled){border-color:#6c91b4;transform:translateY(-1px)}.letter{width:30px;height:30px;display:grid;place-items:center;flex:none;border-radius:9px;background:#263851;font-weight:750}
+.option.correct{border-color:var(--accent);background:#15372f}.option.wrong{border-color:var(--red);background:#3a222b}.option:disabled{cursor:default}
+.feedback{margin-top:18px;border-radius:13px;padding:16px;background:#172a35;border:1px solid #31584c}.feedback.bad{background:#34232c;border-color:#71404b}.feedback strong{display:block;margin-bottom:5px}.feedback p{margin:5px 0 0;color:#d0dbea;font-size:14px}
+.actions{display:flex;justify-content:space-between;gap:12px;margin-top:25px}.btn{border:0;border-radius:12px;padding:12px 18px;font:700 14px system-ui;cursor:pointer;background:var(--accent);color:#082018}.btn.secondary{background:#26364d;color:var(--text)}.btn:disabled{opacity:.35;cursor:not-allowed}
+.center{text-align:center}.score{font-size:56px;font-weight:850;color:var(--accent);line-height:1.1;margin:12px 0}.result-list{display:grid;gap:10px;margin:20px 0}.result{background:#17253a;border:1px solid var(--line);border-radius:12px;padding:13px;text-align:left;font-size:14px}.result small{display:block;color:var(--muted);margin-top:5px}.good{color:var(--accent)}.badtext{color:var(--red)}
+.hidden{display:none}.foot{text-align:center;color:var(--muted);font-size:12px;margin:16px}
+@media(max-width:520px){body{padding:14px}.top{margin-bottom:15px}.actions .btn{flex:1;padding:12px 8px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">BIOLOGY<span style="color:var(--accent)">.QUIZ</span></div><div class="pill">ASAS BIOLOGI XII</div></div>
+  <main class="card" id="quiz">
+    <div class="meta"><span id="counter">SOAL 1 DARI 25</span><span id="percent">4%</span></div>
+    <div class="bar"><div class="fill" id="progress"></div></div>
+    <div class="topic" id="topic"></div>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+    <div class="actions"><button class="btn secondary" id="prev">← Sebelumnya</button><button class="btn" id="next" disabled>Selanjutnya →</button></div>
+    <div class="foot">Pilih satu jawaban. Pembahasan akan muncul setelah kamu menjawab.</div>
+  </main>
+  <main class="card hidden" id="result"></main>
+</div>
+<script>
+const questions = [
+["Pertumbuhan dan Perkembangan","Peristiwa bertambahnya ukuran, massa, dan volume organisme yang bersifat irreversible disebut ...",["Diferensiasi","Pertumbuhan","Perkembangan","Adaptasi","Regenerasi"],1,"Pertumbuhan adalah pertambahan ukuran, massa, volume, dan jumlah sel yang bersifat irreversible (tidak dapat kembali)."],
+["Pertumbuhan dan Perkembangan","Perubahan tumbuhan dari fase vegetatif menuju fase generatif merupakan contoh ...",["Pertumbuhan primer","Pembelahan mitosis","Perkembangan","Pertumbuhan sekunder","Osmosis"],2,"Perkembangan merupakan proses menuju kedewasaan yang ditandai perubahan fungsi dan kemampuan organisme untuk bereproduksi."],
+["Pertumbuhan dan Perkembangan","Hormon tumbuhan yang berperan dalam pemanjangan sel dan dominansi apikal adalah ...",["Auksin","Etilen","Asam absisat","Sitokinin","Kalin"],0,"Auksin merangsang pemanjangan sel, terutama pada ujung batang, dan berperan dalam dominansi apikal."],
+["Pertumbuhan dan Perkembangan","Berikut yang termasuk faktor eksternal yang memengaruhi pertumbuhan tumbuhan adalah ...",["Gen dan hormon","Gen dan enzim","Hormon dan gen","Cahaya dan suhu","Kromosom dan gen"],3,"Faktor eksternal berasal dari lingkungan, seperti cahaya, suhu, air, kelembapan, oksigen, dan unsur hara."],
+["Pertumbuhan dan Perkembangan","Pertumbuhan primer pada tumbuhan menyebabkan ...",["Batang bertambah besar diameternya","Akar dan batang bertambah panjang","Terbentuknya jaringan gabus","Diameter batang meningkat","Pembentukan lingkaran tahun"],1,"Pertumbuhan primer terjadi akibat aktivitas meristem apikal pada ujung akar dan batang sehingga tumbuhan bertambah panjang."],
+["Pertumbuhan dan Perkembangan","Jaringan yang bertanggung jawab terhadap pertumbuhan sekunder pada tumbuhan dikotil adalah ...",["Epidermis","Meristem apikal","Kambium","Parenkim","Kolenkim"],2,"Kambium merupakan meristem lateral yang membentuk xilem dan floem sekunder sehingga diameter batang bertambah."],
+["Pertumbuhan dan Perkembangan","Pada hewan, proses pertumbuhan dan perkembangan embrio diawali dengan ...",["Fertilisasi, pembentukan zigot, kemudian pembelahan","Gastrulasi, fertilisasi, kemudian zigot","Diferensiasi, fertilisasi, kemudian pembelahan","Morulasi, fertilisasi, kemudian blastula","Organogenesis, fertilisasi, kemudian zigot"],0,"Urutannya dimulai dari fertilisasi yang menghasilkan zigot, dilanjutkan pembelahan mitosis, morula, blastula, gastrula, dan organogenesis."],
+["Metabolisme","Metabolisme yang menyusun molekul sederhana menjadi molekul kompleks dan membutuhkan energi disebut ...",["Katabolisme","Fermentasi","Respirasi","Anabolisme","Glikolisis"],3,"Anabolisme adalah reaksi penyusunan molekul sederhana menjadi molekul kompleks dengan membutuhkan energi, contohnya fotosintesis."],
+["Metabolisme","Pernyataan yang tepat mengenai enzim adalah ...",["Habis setelah reaksi berlangsung","Mempercepat reaksi dengan menurunkan energi aktivasi","Selalu bekerja pada semua suhu","Mengubah hasil akhir reaksi","Tidak dipengaruhi pH"],1,"Enzim merupakan biokatalisator yang mempercepat reaksi dengan menurunkan energi aktivasi dan tidak habis dalam reaksi."],
+["Metabolisme","Dalam percobaan enzim katalase, ekstrak hati ditetesi H₂O₂ dan menghasilkan gelembung gas. Gas tersebut adalah ...",["Karbon dioksida","Hidrogen","Nitrogen","Metana","Oksigen"],4,"Katalase menguraikan hidrogen peroksida menjadi air dan oksigen. Gelembung yang terbentuk adalah gas O₂."],
+["Metabolisme","Urutan tahapan respirasi aerob yang benar adalah ...",["Glikolisis – siklus Krebs – dekarboksilasi oksidatif – transpor elektron","Siklus Krebs – glikolisis – transpor elektron","Glikolisis – dekarboksilasi oksidatif – siklus Krebs – transpor elektron","Transpor elektron – glikolisis – siklus Krebs","Fermentasi – glikolisis – siklus Krebs"],2,"Urutan respirasi aerob adalah glikolisis, dekarboksilasi oksidatif, siklus Krebs, kemudian rantai transpor elektron."],
+["Metabolisme","Tempat berlangsungnya glikolisis dalam sel adalah ...",["Sitoplasma","Matriks mitokondria","Membran dalam mitokondria","Nukleus","Kloroplas"],0,"Glikolisis berlangsung di sitoplasma dan memecah satu molekul glukosa menjadi dua molekul piruvat."],
+["Metabolisme","Fermentasi alkohol menghasilkan produk akhir berupa ...",["Asam laktat dan oksigen","Air dan ATP saja","Asam piruvat dan oksigen","Etanol dan karbon dioksida","Glukosa dan karbon dioksida"],3,"Fermentasi alkohol, misalnya pada ragi, menghasilkan etanol dan CO₂ serta memperoleh sedikit ATP dari glikolisis."],
+["Metabolisme","Dalam fotosintesis, reaksi terang berlangsung di bagian ...",["Stroma","Membran tilakoid","Sitoplasma","Matriks mitokondria","Membran inti"],1,"Reaksi terang berlangsung pada membran tilakoid kloroplas. Energi cahaya digunakan untuk menghasilkan ATP, NADPH, dan O₂."],
+["Metabolisme","Siklus Calvin dalam fotosintesis berfungsi untuk ...",["Memecah air","Menghasilkan oksigen dari fotolisis","Menangkap dan mengikat CO₂ untuk membentuk senyawa organik","Menghasilkan energi dari glukosa","Mengubah oksigen menjadi air"],2,"Siklus Calvin berlangsung di stroma dan menggunakan ATP serta NADPH untuk mengikat CO₂ menjadi senyawa organik."],
+["Materi Genetik","Basa nitrogen yang terdapat pada DNA tetapi tidak terdapat pada RNA adalah ...",["Adenin","Guanin","Sitosin","Urasil","Timin"],4,"DNA memiliki basa A, T, G, C, sedangkan RNA memiliki A, U, G, C. RNA menggunakan urasil sebagai pengganti timin."],
+["Materi Genetik","Pasangan basa nitrogen yang benar pada DNA adalah ...",["A–G dan T–C","A–T dan G–C","A–C dan G–T","A–U dan G–C","T–U dan A–G"],1,"Dalam DNA, adenin berpasangan dengan timin, sedangkan guanin berpasangan dengan sitosin."],
+["Materi Genetik","Bagian kromosom yang menjadi tempat melekatnya benang spindel saat pembelahan sel adalah ...",["Telomer","Kromatid","Kromomer","Sentromer","Lengan kromosom"],3,"Sentromer merupakan bagian kromosom yang menghubungkan kromatid saudara dan menjadi lokasi kinetokor tempat benang spindel melekat."],
+["Materi Genetik","Proses pembentukan mRNA berdasarkan cetakan DNA disebut ...",["Translasi","Replikasi","Transkripsi","Mutasi","Transformasi"],2,"Transkripsi adalah proses penyalinan informasi genetik dari DNA menjadi RNA, khususnya mRNA."],
+["Materi Genetik","Jika urutan basa DNA cetakan adalah TAC–AAA–CGG, urutan mRNA yang terbentuk adalah ...",["AUG–UUU–GCC","TAC–AAA–CGG","ATG–TTT–GCC","UAC–AAA–CGG","AUG–AAA–CGG"],0,"Pasangan basa saat transkripsi: T menjadi A, A menjadi U, C menjadi G, dan G menjadi C. Hasilnya AUG–UUU–GCC."],
+["Materi Genetik","Tempat berlangsungnya proses translasi atau penerjemahan mRNA menjadi polipeptida adalah ...",["Nukleolus","Lisosom","Badan Golgi","Mitokondria saja","Ribosom"],4,"Translasi berlangsung pada ribosom. tRNA membawa asam amino sesuai kodon mRNA untuk membentuk rantai polipeptida."],
+["Genetika Mendel","Persilangan Aa × Aa menghasilkan perbandingan fenotipe dominan dan resesif jika dominansi sempurna sebesar ...",["1 : 1","3 : 1","1 : 2 : 1","9 : 3 : 3 : 1","2 : 1"],1,"Hasil genotipe AA, Aa, Aa, aa. Tiga individu berfenotipe dominan dan satu resesif."],
+["Genetika Mendel","Persilangan dihibrid AaBb × AaBb dengan asortasi bebas dan dominansi sempurna menghasilkan rasio fenotipe ...",["1 : 2 : 1","3 : 1","1 : 1 : 1 : 1","9 : 3 : 3 : 1","12 : 3 : 1"],3,"Persilangan dihibrid heterozigot dengan asortasi bebas menghasilkan rasio fenotipe klasik 9 : 3 : 3 : 1."],
+["Genetika Mendel","Persilangan dua individu heterozigot untuk gen letal resesif (Ll × Ll), dengan ll menyebabkan kematian embrio. Rasio keturunan hidup adalah ...",["3 : 1","1 : 2 : 1","2 : 1","1 : 1","9 : 3 : 3 : 1"],2,"Hasil awal adalah 1 LL : 2 Ll : 1 ll. Genotipe ll mati, sehingga perbandingan individu hidup menjadi 1 LL : 2 Ll atau 2 : 1."],
+["Genetika Mendel","Interaksi dua gen yang menghasilkan rasio fenotipe 9 : 3 : 4 dikenal sebagai ...",["Epistasis resesif","Polimeri","Komplementer","Kriptomeri","Epistasis dominan"],0,"Epistasis resesif terjadi ketika alel resesif homozigot pada satu gen menutupi ekspresi gen lain. Rasio klasiknya 9 : 3 : 4."]
+];
+const letters=["A","B","C","D","E"];let idx=0,answers={};
+const $=id=>document.getElementById(id);
+function render(){
+ const q=questions[idx], chosen=answers[idx];
+ $("counter").textContent=`SOAL ${idx+1} DARI ${questions.length}`;
+ $("percent").textContent=`${Math.round((idx+1)/questions.length*100)}%`;
+ $("progress").style.width=`${(idx+1)/questions.length*100}%`;
+ $("topic").textContent=q[0];$("question").textContent=q[1];
+ $("options").innerHTML="";
+ q[2].forEach((v,i)=>{
+  const b=document.createElement("button");b.className="option";
+  if(chosen!==undefined){b.disabled=true;if(i===q[3])b.classList.add("correct");if(i===chosen&&chosen!==q[3])b.classList.add("wrong")}
+  b.innerHTML=`<span class="letter">${letters[i]}</span><span>${v}</span>`;
+  b.onclick=()=>{answers[idx]=i;render()};$("options").appendChild(b);
+ });
+ const fb=$("feedback");
+ if(chosen!==undefined){fb.className="feedback"+(chosen===q[3]?"":" bad");fb.innerHTML=chosen===q[3]?`<strong class="good">✓ Benar! Jawaban kamu tepat.</strong><p>${q[4]}</p>`:`<strong class="badtext">✕ Belum tepat.</strong><p><b>Jawaban benar: ${letters[q[3]]}. ${q[2][q[3]]}</b></p><p>${q[4]}</p>`}
+ else fb.className="feedback hidden";
+ $("prev").disabled=idx===0;$("next").disabled=chosen===undefined;
+ $("next").textContent=idx===questions.length-1?"Lihat hasil →":"Selanjutnya →";
+}
+function showResult(){
+ const score=questions.reduce((s,q,i)=>s+(answers[i]===q[3]?1:0),0);
+ $("quiz").classList.add("hidden");const r=$("result");r.classList.remove("hidden");
+ let rows=questions.map((q,i)=>`<div class="result"><b>Soal ${i+1} · ${q[0]}</b><div>${q[1]}</div><small class="${answers[i]===q[3]?"good":"badtext"}">${answers[i]===q[3]?"✓ Benar":"✕ Salah"} · Kunci: ${letters[q[3]]}. ${q[2][q[3]]}</small>${answers[i]!==q[3]?`<small>Alasan: ${q[4]}</small>`:""}</div>`).join("");
+ r.innerHTML=`<div class="center"><div class="pill">HASIL LATIHAN</div><h1 style="margin-top:18px">Latihan selesai!</h1><div class="score">${score*4}/100</div><b>${score} benar dari 25 soal</b><p class="sub">${score>=22?"Sangat bagus!":score>=18?"Bagus, pertahankan!":score>=15?"Lumayan, pelajari lagi yang salah.":"Tetap semangat. Baca pembahasan dan coba lagi."}</p><p><span class="good">${score} benar</span> · <span class="badtext">${25-score} salah</span></p></div><h2>Evaluasi jawaban</h2><div class="result-list">${rows}</div><button class="btn" id="restart" style="width:100%">↻ Ulangi latihan</button>`;
+ $("restart").onclick=()=>{idx=0;answers={};r.classList.add("hidden");$("quiz").classList.remove("hidden");render();};
+}
+$("prev").onclick=()=>{if(idx>0){idx--;render()}};
+$("next").onclick=()=>{if(idx===questions.length-1)showResult();else{idx++;render()}};
+render();
+</script>
+</body>
+</html>
